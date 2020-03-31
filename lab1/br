@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# build image and run container
+docker build -t pds-lab1 .
+docker run -it pds-lab1
