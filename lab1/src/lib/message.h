@@ -23,6 +23,8 @@ class Message {
         long getId();
         int getSize();
         const char* getData();
+        Message &operator=(const Message &source); // operatore di assegnazione
+        Message &operator=(Message &&source); // assegnazione per movimento
         friend std::ostream& operator<<(std::ostream& os, const Message& m);
     
 };

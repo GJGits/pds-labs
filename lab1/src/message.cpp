@@ -3,21 +3,19 @@
 
 int Message::counter = 0;
 
-Message::Message(): id(-1), size(0){
-    this->data = nkMessage(0);
+Message::Message(): id{-1}, data{nkMessage(0)}, size{0}{
 }
 
-Message::Message(int size): id(counter++), size(size) {
-    this->data = nkMessage(size);
+Message::Message(int size): id{counter++},  data{nkMessage(size)}, size{size} {
 }
 
-Message::Message(const Message &source): id(source.id), size(source.size) {
+Message::Message(const Message &source): id{source.id}, size{source.size} {
     this->data = new char[size + 1];
     memcpy(this->data, source.data, source.size + 1); 
 }
 
 Message::Message(Message &&source): 
-    id(std::exchange(source.id, 0)), size(std::exchange(source.size, 0)) {
+    id{std::exchange(source.id, 0)}, size{std::exchange(source.size, 0)} {
    this->data = source.data;
    source.data = nullptr; 
 }
@@ -37,6 +35,31 @@ int Message::getSize() {
 
 const char* Message::getData() {
     return this->data;
+}
+
+Message& Message::operator=(const Message &source) {
+    //std::cout << "chiamato operatore di assegnazione" << std::endl;
+    if (this != &source) {
+        delete[] this->data;
+        this->data = nullptr;
+        this->id = source.id;
+        this->size = source.size;
+        this->data = new char[size + 1];
+        memcpy(this->data, source.data, size + 1);
+    }
+    return *this;
+}
+
+Message& Message::operator=(Message && source) {
+    //std::cout << "chiamato operatore di assegnazione per movimento" << std::endl;
+    if (this != &source) {
+        delete[] this->data;
+        this->id=source.id;
+        this->size=source.size;
+        this->data=source.data;
+        source.data = nullptr;
+    }
+    return *this;
 }
 
 std::ostream& operator << (std::ostream& os, const Message& m) {

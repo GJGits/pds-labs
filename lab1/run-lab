@@ -4,6 +4,6 @@
 prj_name=$1
 
 # ---- COMPILE AND RUN APP ---- #
-g++ -g -Wall -Werror ./*.cpp ./test/*.cpp -o $prj_name
+g++ -g -Wall -Werror -std=c++17 ./*.cpp ./test/*.cpp -o $prj_name
 valgrind --leak-check=full --show-leak-kinds=all ./$prj_name
 
