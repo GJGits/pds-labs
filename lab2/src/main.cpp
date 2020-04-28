@@ -5,6 +5,6 @@
 
 int main()
 {
-    //test_all();
+    test_all();
     return 0;
 }
