@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "base.h"
 
 class File : public Base

@@ -8,18 +8,18 @@
 #include "base.h"
 #include "file.h"
 
-class Directory: public Base
+class Directory : public Base
 {
 private:
     std::weak_ptr<Directory> parent;
     std::weak_ptr<Directory> self;
     std::unordered_map<std::string, std::shared_ptr<Base>> children;
-    Directory(std::string name):Base(name), parent{std::weak_ptr<Directory>{}}, self{std::weak_ptr<Directory>{}} {}
+    Directory(std::string name) : Base(name), parent{std::weak_ptr<Directory>{}}, self{std::weak_ptr<Directory>{}} {}
 
 public:
     static std::shared_ptr<Directory> root;
-    const std::string getName();              
-    const  virtual void ls(int indent);
+    const std::string getName();
+    const virtual void ls(int indent);
     const virtual int mType();
     std::weak_ptr<Base> get(const std::string &name);
     std::weak_ptr<Directory> getDir(const std::string &name);
@@ -29,5 +29,5 @@ public:
     bool remove(const std::string &name);
     static std::shared_ptr<Directory> getRoot();
     static std::shared_ptr<Directory> makeDir(std::string name, std::weak_ptr<Directory> parent);
-    static Directory *heap(std::string name) { return new Directory(name); }
+    static Directory *heap(std::string name) { return new Directory(name); } //todo: valutare se necessario
 };

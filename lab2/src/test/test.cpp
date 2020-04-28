@@ -1,4 +1,6 @@
 #include "../lib/test.h"
+#include "../lib/base.h"
+#include "../lib/file.h"
 #include "../lib/directory.h"
 #include <string.h>
 
@@ -19,10 +21,15 @@ void printResult(int tot_tests, int errors)
     }
 }
 
+void test_constructor() {
+    
+}
+
 void test_all()
 {
     std::cout << std::endl;
     std::cout << std::endl;
-    //test_constructor0();
+    test_constructor();
     std::cout << std::endl;
 }
+
