@@ -1,5 +1,6 @@
 #!/bin/bash
 
-# build image and run container
-docker build -t pds-lab1 .
-docker run -it pds-lab1
+# build image uncomment only for the very first run 
+#docker build -t pds-lab1 .
+# run the container with volumes
+docker run -it --rm -v $PWD/src:/home/lab1/ pds-lab1

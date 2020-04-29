@@ -18,7 +18,6 @@ private:
 
 public:
     static std::shared_ptr<Directory> root;
-    const std::string getName();
     const virtual void ls(int indent);
     const virtual int mType();
     std::weak_ptr<Base> get(const std::string &name);

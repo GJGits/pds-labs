@@ -3,4 +3,4 @@
 # build image uncomment only for the very first run 
 #docker build -t pds-lab2 .
 # run the container with volumes
-docker run -it --rm -v /home/gjcode/Politecnico/CodeProjects/PDS/labs/lab2/src:/home/lab2/ pds-lab2
+docker run -it --rm -v $PWD/src:/home/lab2/ pds-lab2

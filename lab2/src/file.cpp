@@ -7,7 +7,7 @@
  */
 const uintmax_t File::getSize()
 {
-    return 0;
+    return this->size;
 }
 
 /**
@@ -16,6 +16,12 @@ const uintmax_t File::getSize()
  */
 const void File::ls(int indent)
 {
+    for (int i = 0; i < indent; i++)
+    {
+        std::cout << " ";
+    }
+
+    std::cout << this->getName() << " " << this->getSize() << std::endl;
 }
 
 /**
@@ -26,4 +32,9 @@ const void File::ls(int indent)
 const int File::mType()
 {
     return 1;
+}
+
+std::shared_ptr<File> File::makeFile(std::string name, uintmax_t size)
+{
+    return std::shared_ptr<File>(new File(name, size));
 }

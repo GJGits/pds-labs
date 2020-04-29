@@ -1,5 +1,11 @@
 #include "lib/directory.h"
 
+/** 
+ * Bisgona inizializzare la variabile statica altrimenti non e' possibile accedere
+ * ad una variabile statica all'interno di una funzione non statica.
+ * */
+std::shared_ptr<Directory> Directory::root = std::shared_ptr<Directory>(nullptr);
+
 /**
  * elenca ricorsivamente File e Directory figli della directory 
  * corrente, indentati in modo appropriato.
@@ -8,6 +14,17 @@
  */
 const void Directory::ls(int indent)
 {
+    for (int i = 0; i < indent; i++)
+    {
+        std::cout << " ";
+    }
+
+    std::cout << "[+] " << this->getName() << std::endl;
+
+    for (std::pair<std::string, std::shared_ptr<Base>> el : this->children)
+    {
+        el.second.get()->ls(indent + 4);
+    }
 }
 
 /**
@@ -34,7 +51,19 @@ const int Directory::mType()
  */
 std::weak_ptr<Base> Directory::get(const std::string &name)
 {
-    return std::shared_ptr<Base>();
+    if (name.compare(".") == 0)
+    {
+        return std::dynamic_pointer_cast<Base>(this->self.lock());
+    }
+    else if (name.compare("..") == 0)
+    {
+        return std::dynamic_pointer_cast<Base>(this->parent.lock());
+    }
+    else
+    {
+        std::unordered_map<std::string, std::shared_ptr<Base>>::const_iterator got = this->children.find(name);
+        return got == this->children.end() ? std::shared_ptr<Base>() : got->second;
+    }
 }
 
 /**
@@ -48,7 +77,7 @@ std::weak_ptr<Base> Directory::get(const std::string &name)
  */
 std::weak_ptr<Directory> Directory::getDir(const std::string &name)
 {
-    return std::shared_ptr<Directory>();
+    return std::dynamic_pointer_cast<Directory>(get(name).lock());
 }
 
 /**
@@ -62,7 +91,7 @@ std::weak_ptr<Directory> Directory::getDir(const std::string &name)
  */
 std::weak_ptr<File> Directory::getFile(const std::string &name)
 {
-    return std::shared_ptr<File>();
+    return std::dynamic_pointer_cast<File>(get(name).lock());
 }
 
 /**
@@ -73,12 +102,11 @@ std::weak_ptr<File> Directory::getFile(const std::string &name)
  */
 std::shared_ptr<Directory> Directory::getRoot()
 {
-    /*
-    if (Directory::root.use_count() == 0)
-        Directory::root = std::shared_ptr<Directory>(heap("/"));
-    return root;
-    */
-    return std::shared_ptr<Directory>();
+    if (Directory::root.get() == nullptr)
+    {
+        Directory::root = Directory::makeDir("/", Directory::root);
+    }
+    return Directory::root;
 }
 
 /**
@@ -93,12 +121,14 @@ std::shared_ptr<Directory> Directory::getRoot()
  */
 std::shared_ptr<Directory> Directory::addDirectory(const std::string &name)
 {
-    /*
-    std::shared_ptr<Directory> child = makeDir(name, this->self);
-    this->children.insert(std::make_pair(name, child));
-    return child;
-    */
-    return std::shared_ptr<Directory>();
+    if (name.compare(".") != 0 && name.compare("..") != 0 && this->children.find(name) == this->children.end())
+    {
+        std::shared_ptr<Directory> dir = Directory::makeDir(name, this->self);
+        this->children.insert(std::make_pair(name, std::dynamic_pointer_cast<Base>(dir)));
+        return dir;
+    }
+    else
+        return std::shared_ptr<Directory>();
 }
 
 /**
@@ -113,9 +143,16 @@ std::shared_ptr<Directory> Directory::addDirectory(const std::string &name)
  * 
  * @return: shared_ptr all'oggetto appena creato
  */
-std::shared_ptr<File> addFile(const std::string &nome, uintmax_t size)
+std::shared_ptr<File> Directory::addFile(const std::string &name, uintmax_t size)
 {
-    return std::shared_ptr<File>();
+    if (name.compare(".") != 0 && name.compare("..") != 0 && this->children.find(name) == this->children.end())
+    {
+        std::shared_ptr<File> file(File::makeFile(name, size));
+        this->children.insert(std::make_pair(name, std::dynamic_pointer_cast<Base>(file)));
+        return file;
+    }
+    else
+        return std::shared_ptr<File>();
 }
 
 /**
@@ -128,17 +165,25 @@ std::shared_ptr<File> addFile(const std::string &nome, uintmax_t size)
  * 
  * @return: boolean che indica se l'eliminazione e' andata a buon fine
  */
-bool remove(const std::string &name)
+bool Directory::remove(const std::string &name)
 {
-    return false;
+    return this->children.erase(name) == 1;
 }
 
-// todo: valutare se necessario
+/**
+ * Factory method che permette di creare una cartella dato il nome e il parent.
+ * 
+ * @name: nome della cartella da creare
+ * @parent: weak_ptr alla cartella parent
+ * 
+ * @return: shared_ptr che si riferisce alla cartella appena creata
+ */
 std::shared_ptr<Directory> Directory::makeDir(std::string name, std::weak_ptr<Directory> parent)
 {
+    // todo: attualmente il metodo e' invocabile dall'esterno, risolvere!
     Directory *d = new Directory(name);
     std::shared_ptr<Directory> dir(d);
     dir->self = dir;
-    dir->parent = parent;
+    dir->parent = parent.lock().get() == nullptr ? dir : parent; // parent e' nullptr solo in caso di root
     return dir;
 }
