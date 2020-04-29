@@ -8,7 +8,7 @@ Per quanto riguarda la parte di C++ ho creato una semplice immagine docker basat
 
 ## Utilizzatori Linux e MacOS
 
-Per provare il codice assicurarsi di avere installato [Docker](), posizionarsi nella cartella di riferimento di uno dei labotari ed eseguire il comando  `./br`. Questo è il comando che effettua la build del container e ne lancia un'istanza. `Al primo lancio è fondamentale decommentare il comando che effettua la build dalla seconda in poi ricommentare il comando`. A questo punto ci si trova nel container e per eseguire il codice basta lanciare il comando `./run-lab <nome-cartella>`, questo creerà un eseguibile con il nome specificato ed eseguirà il programma.
+Per provare il codice assicurarsi di avere installato [Docker](https://www.docker.com/), posizionarsi nella cartella di riferimento di uno dei labotari ed eseguire il comando  `./br`. Questo è il comando che effettua la build del container e ne lancia un'istanza. `Al primo lancio è fondamentale decommentare il comando che effettua la build dalla seconda in poi ricommentare il comando`. A questo punto ci si trova nel container e per eseguire il codice basta lanciare il comando `./run-lab <nome-cartella>`, questo creerà un eseguibile con il nome specificato ed eseguirà il programma.
 
 ## Utilizzatori Windows
 
