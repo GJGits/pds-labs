@@ -4,7 +4,7 @@ Repository contenente le soluzioni ai laboratori del cordo di Programmazione di 
 
 # Utilizzo con Docker
 
-Per quanto riguarda la parte di C++ ho creato una semplice immagine docker basata su linux con all'interno tool per compilare e debuggare [gjcode-pds](https://hub.docker.com/repository/docker/gjcode/gjcode-pds).
+Per quanto riguarda la parte di C++ ho creato una semplice immagine docker basata su linux con all'interno tool per compilare e debuggare [gjcode-pds](https://hub.docker.com/repository/docker/gjcode/gjcode-pds). Nelle cartelle dei laboratori è già presente un apposito Dockerfile pronto per l'uso.
 
 ## Utilizzatori Linux e MacOS
 
