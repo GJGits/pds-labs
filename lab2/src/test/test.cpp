@@ -1,8 +1,4 @@
 #include "../lib/test.h"
-#include "../lib/base.h"
-#include "../lib/file.h"
-#include "../lib/directory.h"
-#include <string.h>
 
 Color::Modifier red(Color::FG_RED);
 Color::Modifier blue(Color::FG_BLUE);
@@ -165,6 +161,69 @@ void test_ls()
     std::shared_ptr<File> beta2 = beta->addFile("beta2", 200);
 
     root.get()->ls(0);
+
+    // clean fs
+
+    root->remove("alpha");
+    root->remove("beta");
+}
+
+void test_iterator()
+{
+
+    std::cout << "##### TEST FILESYSTEM_ITERATOR #####" << std::endl;
+
+    std::shared_ptr<Directory> root = Directory::getRoot();
+    std::shared_ptr<Directory> last_parent_dir{nullptr};
+
+    for (auto &p : std::filesystem::recursive_directory_iterator("/home"))
+    {
+        std::stringstream ss(p.path().string());
+        std::vector<std::string> tokens;
+        std::string token;
+
+        // collecting tokens
+        while (std::getline(ss, token, '/'))
+        {
+            if (!token.empty())
+            {
+                tokens.push_back(token);
+            }
+        }
+
+        // create structure
+        for (std::vector<int>::size_type i = 0; i != tokens.size(); i++)
+        {
+            // sicuramente una directory
+            if (i < tokens.size() - 1)
+            {
+                // se parent dir e' vuota allora sono nella root
+                if (last_parent_dir.get() == nullptr)
+                {
+                    // se children non contiene la directory aggiungo
+                    last_parent_dir = root->getDir(tokens[i]).lock().use_count() == 0 ? root->addDirectory(tokens[i]) : root->getDir(tokens[i]).lock();
+                }
+                else
+                {
+                    last_parent_dir = last_parent_dir->getDir(tokens[i]).lock().use_count() == 0 ? last_parent_dir->addDirectory(tokens[i]) : last_parent_dir->getDir(tokens[i]).lock();
+                }
+            }
+        }
+
+        if (p.is_directory())
+        {
+            last_parent_dir->addDirectory(p.path().filename().string());
+        }
+
+        if (p.is_regular_file())
+        {
+            last_parent_dir->addFile(p.path().filename().string(), p.file_size());
+        }
+
+        last_parent_dir = std::shared_ptr<Directory>{nullptr};
+    }
+
+    root->ls(0);
 }
 
 void test_all()
@@ -176,6 +235,8 @@ void test_all()
     test_add_get_remove();
     std::cout << std::endl;
     test_ls();
+    std::cout << std::endl;
+    test_iterator();
     std::cout << std::endl;
     std::cout << std::endl;
 }
