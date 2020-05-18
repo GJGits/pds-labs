@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# build image uncomment only for the very first run 
+docker build -t pds-lab3 .
+# run the container with volumes
+docker run -it --rm -v $PWD:/home/lab3/ pds-lab3
