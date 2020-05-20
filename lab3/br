@@ -1,6 +1,8 @@
 #!/bin/bash
 
+#upgrade image uncomment only to upgrade image
+#docker build -t gjcode/gjcode-pds:1.0.4 .
 # build image uncomment only for the very first run 
-docker build -t pds-lab3 .
+#docker build -t pds-lab3 .
 # run the container with volumes
 docker run -it --rm -v $PWD:/home/lab3/ pds-lab3
