@@ -17,19 +17,21 @@ void printResult(int tot_tests, int errors)
     }
 }
 
+std::string parse(const std::string &target, const std::regex &rgx)
+{
+    std::smatch matches;
+    std::string token{""};
+    token = std::regex_search(target, matches, rgx) ? matches[0] : std::string("NOT_FOUND");
+    return token;
+}
+
 void mapReduceIp()
 {
     std::cout << "##### TEST MAP-REDUCE IP #####\n";
-    auto mapIp = [](const SimpleMapperInputT &input) {
-        std::vector<std::string> tokens;
-        std::stringstream check1(input.getInput());
-        std::string intermediate;
-        while (getline(check1, intermediate, ' '))
-        {
-            tokens.push_back(intermediate);
-        }
-        SimpleResult<int> t{tokens[0], 1};
-        return std::vector<SimpleResult<int>>{t};
+    std::regex rgx_ip("\\d+\\.\\d+\\.\\d+\\.\\d+");
+    auto mapIp = [&rgx_ip](const SimpleMapperInputT &input) {
+        std::string token = parse(std::move(input.getInput()), rgx_ip);
+        return std::vector<SimpleResult<int>>{{token, 1}};
     };
     auto reduce = [](const SimpleReducerInput<int, int> &input) { return SimpleResult<int>{input.getKey(), (input.getValue() + input.getAccumulator())}; };
     std::map<std::string, SimpleResult<int>> results;

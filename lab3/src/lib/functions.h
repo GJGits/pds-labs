@@ -1,6 +1,9 @@
+#pragma once
+
 #include <vector>
 #include <fstream>
 #include <map>
+#include <regex>
 
 #include "mapper.h"
 #include "reducer.h"

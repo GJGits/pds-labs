@@ -12,4 +12,5 @@
 
 void test_all();
 void printResult(int tot_tests, int errors);
+std::string parse(const std::string &target, const std::regex &rgx);
 void mapReduceIp();
