@@ -1,14 +1,17 @@
+#pragma once
+
 #include <string>
 
-class ReducerInputT
+template <typename V, typename A>
+class SimpleReducerInput
 {
-private:
     std::string key;
-    int value, acc;
+    V value;
+    A accumulator;
 
 public:
-    ReducerInputT(std::string key, int value, int acc);
-    int getValue() const;
-    int getAcc() const;
-    std::string getKey() const;
+    SimpleReducerInput(std::string key, V value, A accumulator) : key(std::move(key)), value(std::move(value)), accumulator(std::move(accumulator)) {}
+    std::string getKey() const { return key; }
+    V getValue() const { return value; }
+    A getAccumulator() const { return accumulator; }
 };

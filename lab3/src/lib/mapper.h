@@ -1,11 +1,13 @@
+#pragma once
+
 #include <string>
 
-class MapperInputT
+class SimpleMapperInputT
 {
 private:
     std::string input;
 
 public:
-    MapperInputT(std::string input);
-    std::string getInput() const;
+    SimpleMapperInputT(std::string input): input{std::move(input)}{}
+    std::string getInput() const {return input;}
 };

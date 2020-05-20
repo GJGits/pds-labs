@@ -1,13 +1,17 @@
+#pragma once
+
 #include <string>
 
-class ResultT
+template <typename T>
+class SimpleResult
 {
-private:
     std::string key;
-    int value;
+    T value;
 
 public:
-    ResultT(std::string key, int value);
-    std::string getKey();
-    int getValue();
+    SimpleResult() = default;
+    SimpleResult(std::string key) : key(std::move(key)) {}
+    SimpleResult(std::string key, T value) : key(std::move(key)), value(std::move(value)) {}
+    std::string getKey() const { return key; }
+    T getValue() const { return value; }
 };

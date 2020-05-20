@@ -13,5 +13,3 @@
 void test_all();
 void printResult(int tot_tests, int errors);
 void mapReduceIp();
-void mapReduceOra();
-void mapReduceURL();

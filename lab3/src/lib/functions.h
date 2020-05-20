@@ -1,5 +1,3 @@
-#include <functional>
-#include <iostream>
 #include <vector>
 #include <fstream>
 #include <map>
@@ -8,11 +6,23 @@
 #include "reducer.h"
 #include "result.h"
 
-template <class MapperInputT, class ResultT>
-std::vector<ResultT> map(const MapperInputT &input);
-
-template <class ReducerInputT, class ResultT>
-ResultT reduce(const ReducerInputT &input);
-
-//template <class MapperInputT, class ReducerInputT, class ResultT>
-std::map<std::string, int> mapReduce(std::string input, std::function<std::vector<ResultT>(const MapperInputT &input)> mapfun, std::function<ResultT(const ReducerInputT &input)> redfun);
+template <typename MapperInputT, typename ResultT, typename ReducerInputT, typename M, typename R>
+std::map<std::string, ResultT> mapReduceSerial(const std::string &inputf, M &mapfun, R &reducefun)
+{
+    std::map<std::string, ResultT> accs{};
+    std::ifstream inFile;
+    std::string line;
+    inFile.open(inputf);
+    if (inFile)
+    {
+        while (getline(inFile, line))
+        {
+            // key: string(ip, data, ...), value: num of occ in line (1 in questo caso)
+            std::vector<ResultT> results = mapfun(line);
+            int acc = accs.find(results[0].getKey()) == accs.end() ? 0 : accs[results[0].getKey()].getValue();
+            ResultT rt = reducefun(ReducerInputT{results[0].getKey(), results[0].getValue(), acc});
+            accs[rt.getKey()] = rt;
+        }
+    }
+    return accs;
+}
