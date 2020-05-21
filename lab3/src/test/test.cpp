@@ -33,7 +33,7 @@ void mapReduceIp()
     {
         DurationLogger mip{"mapreduce_ip"};
         // localhost_access_log.2020
-        results = mapReduceSerial<SimpleMapperInputT, SimpleResult<int>, SimpleReducerInput<int, int>>("../logs/subset.txt", mapIp, reduce);
+        results = mapReduceConcurrent<SimpleMapperInputT, SimpleResult<int>, SimpleReducerInput<int, int>>("../logs/subset.txt", mapIp, reduce);
     }
 
     //print first 100 rows

@@ -11,6 +11,7 @@ private:
     std::string input;
 
 public:
+    SimpleMapperInputT(){} // per deserializzazione
     SimpleMapperInputT(std::string input) : input{std::move(input)} {}
     std::string getInput() const { return input; }
     std::vector<char> serialize() const

@@ -10,6 +10,7 @@ class SimpleReducerInput
     A accumulator;
 
 public:
+    SimpleReducerInput() {} // per deserializzazione
     SimpleReducerInput(std::string key, V value, A accumulator) : key(std::move(key)), value(std::move(value)), accumulator(std::move(accumulator)) {}
     std::string getKey() const { return key; }
     V getValue() const { return value; }
