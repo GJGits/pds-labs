@@ -17,27 +17,23 @@ void printResult(int tot_tests, int errors)
     }
 }
 
-std::string parse(const std::string &target, const std::regex &rgx)
-{
-    std::smatch matches;
-    std::string token{""};
-    token = std::regex_search(target, matches, rgx) ? matches[0] : std::string("NOT_FOUND");
-    return token;
-}
-
 void mapReduceIp()
 {
     std::cout << "##### TEST MAP-REDUCE IP #####\n";
     std::regex rgx_ip("\\d+\\.\\d+\\.\\d+\\.\\d+");
-    auto mapIp = [&rgx_ip](const SimpleMapperInputT &input) {
+    auto mapIp = [&rgx_ip](SimpleMapperInputT input) {
         std::string token = parse(std::move(input.getInput()), rgx_ip);
+        SimpleResult<int> res{token, 1};
+        std::vector<char> ser = res.serialize();
+        res.deserialize(prepareDeserialization(ser));
         return std::vector<SimpleResult<int>>{{token, 1}};
     };
     auto reduce = [](const SimpleReducerInput<int, int> &input) { return SimpleResult<int>{input.getKey(), (input.getValue() + input.getAccumulator())}; };
     std::map<std::string, SimpleResult<int>> results;
     {
         DurationLogger mip{"mapreduce_ip"};
-        results = mapReduceSerial<SimpleMapperInputT, SimpleResult<int>, SimpleReducerInput<int, int>>("../logs/localhost_access_log.2020.txt", mapIp, reduce);
+        // localhost_access_log.2020
+        results = mapReduceSerial<SimpleMapperInputT, SimpleResult<int>, SimpleReducerInput<int, int>>("../logs/subset.txt", mapIp, reduce);
     }
 
     //print first 100 rows
