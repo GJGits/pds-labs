@@ -24,9 +24,8 @@ void mapReduceIp()
     auto mapIp = [&rgx_ip](SimpleMapperInputT input) {
         std::string token = parse(std::move(input.getInput()), rgx_ip);
         SimpleResult<int> res{token, 1};
-        std::vector<char> ser = res.serialize();
-        res.deserialize(prepareDeserialization(ser));
-        return std::vector<SimpleResult<int>>{{token, 1}};
+        //return std::vector<SimpleResult<int>>{{token, 1}};
+        return res;
     };
     auto reduce = [](const SimpleReducerInput<int, int> &input) { return SimpleResult<int>{input.getKey(), (input.getValue() + input.getAccumulator())}; };
     std::map<std::string, SimpleResult<int>> results;
