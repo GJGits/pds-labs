@@ -24,7 +24,6 @@ void mapReduceIp()
     auto mapIp = [&rgx_ip](SimpleMapperInputT input) {
         std::string token = parse(std::move(input.getInput()), rgx_ip);
         SimpleResult<int> res{token, 1};
-        //return std::vector<SimpleResult<int>>{{token, 1}};
         return res;
     };
     auto reduce = [](const SimpleReducerInput<int, int> &input) { return SimpleResult<int>{input.getKey(), (input.getValue() + input.getAccumulator())}; };
@@ -32,11 +31,10 @@ void mapReduceIp()
     {
         DurationLogger mip{"mapreduce_ip"};
         // localhost_access_log.2020
-        results = mapReduceConcurrent<SimpleMapperInputT, SimpleResult<int>, SimpleReducerInput<int, int>>("../logs/subset.txt", mapIp, reduce);
+        results = mapReduceConcurrent<SimpleMapperInputT, SimpleResult<int>, SimpleReducerInput<int, int>>("../logs/localhost_access_log.2020.txt", mapIp, reduce);
     }
 
     //print first 100 rows
-    /*
     int count = 0;
     for (std::pair<std::string, SimpleResult<int>> element : results)
     {
@@ -44,7 +42,6 @@ void mapReduceIp()
         if (++count > 100)
             break;
     }
-    */
 }
 void test_all()
 {

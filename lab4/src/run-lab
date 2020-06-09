@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# ---- GET COMMAND PARAMS ---- #
+prj_name=$1
+
+# ---- COMPILE AND RUN APP ---- #
+g++ -g -Wall -Werror -std=c++17 -pthread ./*.cpp ./test/*.cpp -o ../bin/$prj_name -lstdc++fs
+valgrind --leak-check=full --show-leak-kinds=all ../bin/$prj_name
+rm ../bin/$prj_name
+rm ./--library=stdc++fs
